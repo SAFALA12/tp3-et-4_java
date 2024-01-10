@@ -1,0 +1,367 @@
+package tp4;
+
+public abstract class Vehicule {
+	private int matricule;
+	private int annee_modele;
+	private double prix;
+	private double carburant;
+
+	public Vehicule(int annee_modele) {
+		this.annee_modele = annee_modele;
+	}
+
+	public double getCarburant() {
+		return carburant;
+	}
+
+	public void setCarburant(double carburant) {
+		this.carburant = carburant;
+	}
+
+	public int getMatricule() {
+		return matricule;
+	}
+
+	public void setMatricule(int matricule) {
+		this.matricule = matricule;
+	}
+
+	public int getAnnee_modele() {
+		return annee_modele;
+	}
+
+	public void setAnnee_modele(int annee_modele) {
+		this.annee_modele = annee_modele;
+	}
+
+	public double getPrix() {
+		return prix;
+	}
+
+	public void setPrix(double prix) {
+		this.prix = prix;
+	}
+
+	public String toString() {
+		return "Vehicule [matricule=" + matricule + ", annee_modele=" + annee_modele + ", prix=" + prix + ", carburant="
+				+ carburant + "]";
+	}
+
+	
+}
+*******************************************************************************
+ package TP4;
+
+import java.io.Serializable;
+
+public class Voiture extends Vehicule implements Decapotable, Serializable {
+
+	static int nb = 0;
+	static int nb_max_voiture = 10;
+	static int num_voiture = 0;
+	Carburant type_carburant;
+	static int capacite = 30;
+	private int periodevidange;
+	private boolean toiReplie;
+
+	private Voiture(int annee_modele, Carburant type_carburant) {
+
+		super(annee_modele);
+		this.type_carburant = type_carburant;
+		this.setMatricule("Voiture" + ":" + (++nb));
+	}
+
+	public void setType_carburant(Carburant type_carburant) {
+		this.type_carburant = type_carburant;
+	}
+
+	public void add_carburant(double carburant) {
+		if (this.getCarburant() + carburant <= capacite) {
+			this.setCarburant(carburant + this.getCarburant());
+		} else
+			this.setCarburant(capacite);
+	}
+
+	public int getPeriodevidange() {
+		return periodevidange;
+	}
+
+	public boolean isPlietoit() {
+		return toiReplie;
+	}
+
+	public void setPlietoit(boolean plietoit) {
+		this.toiReplie = plietoit;
+	}
+
+	public static Voiture CreateVoiture(int annee_modele, Carburant type_carburant) {
+		if (nb < nb_max_voiture)
+			return new Voiture(annee_modele, type_carburant);
+		else
+			return null;
+
+	}
+
+	public void replieLeToit() {
+		this.toiReplie = true;
+
+	}
+
+	public Carburant typeCarburant() {
+		return type_carburant;
+	}
+
+	public void periodiciteVidange() {
+		/*
+		 * calcul la p riodicit  du vidange en mois en fonction du type du carburant du
+		 * v hicule : 10mois pour le diesel, 12mois pour l essence et 18mois pour le gaz
+		 */
+		if (this.type_carburant == Carburant.diesel) {
+			this.periodevidange = 10;
+		} else if (this.type_carburant == Carburant.essence) {
+			this.periodevidange = 12;
+		} else if (this.type_carburant == Carburant.gaz) {
+			this.periodevidange = 18;
+		}
+
+	}
+
+	public String toString() {
+		return "Voiture [type_carburant=" + type_carburant + ", periodevidange=" + periodevidange + ", plietoit="
+				+ toiReplie + "]";
+	}
+
+}
+********************************
+package TP4;
+
+import java.io.Serializable;
+
+public class Camion extends Vehicule implements Serializable {
+
+	static int nb = 0;
+	static int nb_max_camions = 10;
+	static int num_voiture = 0;
+	Carburant type_carburant;
+	static int capacite_carburant = 30;
+	private int periodevidange;
+
+	private Camion(int annee_modele, Carburant type_carburant) {
+		super(annee_modele);
+		this.type_carburant = type_carburant;
+		this.setMatricule("Camion" + ":" + (++nb));
+
+	}
+
+	public void setType_carburant(Carburant type_carburant) {
+		this.type_carburant = type_carburant;
+	}
+
+	public void add_carburant(double carburant) {
+		if (this.getCarburant() + carburant < capacite_carburant) {
+			this.setCarburant(carburant + this.getCarburant());
+		} else
+			this.setCarburant(capacite_carburant);
+	}
+
+	public int getPeriodevidange() {
+		return periodevidange;
+	}
+
+	public static Camion CreateCamion(int annee_modele, Carburant type_carburant) {
+		if (nb < nb_max_camions)
+			return new Camion(annee_modele, type_carburant);
+		else
+			return null;
+
+	}
+
+	public Carburant typeCarburant() {
+		return type_carburant;
+	}
+
+	@Override
+	public String toString() {
+		return "Camion [matricule=" + getMatricule() + " , type_carburant=" + type_carburant + ", periodevidange="
+				+ periodevidange + "]";
+	}
+
+	public void periodiciteVidange() {
+		/*
+		 * calcul la p riodicit  du vidange en mois en fonction du type du carburant du
+		 * v hicule : 10mois pour le diesel, 12mois pour l essence et 18mois pour le gaz
+		 */
+		if (this.type_carburant == Carburant.diesel) {
+			this.periodevidange = 10;
+		} else if (this.type_carburant == Carburant.essence) {
+			this.periodevidange = 12;
+		} else if (this.type_carburant == Carburant.gaz) {
+			this.periodevidange = 18;
+		}
+
+	}
+
+}
+*************************
+
+package TP4;
+
+public class Autocar extends Vehicule {
+
+	static int nb = 0;
+	static int nb_max_autocar = 10;
+	static int num_voiture = 0;
+	Carburant type_carburant;
+	static int capacite = 30;
+	private int periodevidange;
+	private boolean toiReplie;
+
+	private Autocar(int annee_modele, Carburant type_carburant) {
+
+		super(annee_modele);
+		this.type_carburant = type_carburant;
+		this.setMatricule("AutoCar" + ":" + (++nb));
+
+	}
+
+	public void setType_carburant(Carburant type_carburant) {
+		this.type_carburant = type_carburant;
+	}
+
+	public void add_carburant(double carburant) {
+		if (this.getCarburant() + carburant < capacite) {
+			this.setCarburant(carburant + this.getCarburant());
+		} else
+			this.setCarburant(capacite);
+	}
+
+	public int getPeriodevidange() {
+		return periodevidange;
+	}
+
+	public boolean isPlietoit() {
+		return toiReplie;
+	}
+
+	public void setPlietoit(boolean plietoit) {
+		this.toiReplie = plietoit;
+	}
+
+	public static Autocar CreateAutoCar(int annee_modele, Carburant type_carburant) {
+		if (nb < nb_max_autocar)
+			return new Autocar(annee_modele, type_carburant);
+		else
+			return null;
+
+	}
+
+	public void replieLeToit() {
+		this.toiReplie = true;
+
+	}
+
+	public Carburant typeCarburant() {
+		return type_carburant;
+	}
+
+	public void periodiciteVidange() {
+		/*
+		 * calcul la p riodicit  du vidange en mois en fonction du type du carburant du
+		 * v hicule : 10mois pour le diesel, 12mois pour l essence et 18mois pour le gaz
+		 */
+		if (this.type_carburant == Carburant.diesel) {
+			this.periodevidange = 10;
+		} else if (this.type_carburant == Carburant.essence) {
+			this.periodevidange = 12;
+		} else if (this.type_carburant == Carburant.gaz) {
+			this.periodevidange = 18;
+		}
+
+	}
+
+	@Override
+	public String toString() {
+		return "AutoCar [type_carburant=" + type_carburant + ", periodevidange=" + periodevidange + ", plietoit="
+				+ toiReplie + "]";
+	}
+
+}
+*********************************
+package TP4;
+
+public interface Decapotable {
+	public void replieLeToit();
+
+}
+***********************************
+package TP4;
+
+public enum Carburant {
+	diesel, gaz, essence
+}
+************************************
+package TP4;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+public class Parc {
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
+		Voiture v1 = Voiture.CreateVoiture(2010, Carburant.diesel);
+		Voiture v3 = Voiture.CreateVoiture(2020, Carburant.gaz);
+		Voiture v5 = Voiture.CreateVoiture(2000, Carburant.essence);
+		Camion c1 = Camion.CreateCamion(2013, Carburant.essence);
+		c1.periodiciteVidange();
+		System.out.println(c1.toString());
+		Camion c2 = Camion.CreateCamion(2003, Carburant.diesel);
+		c2.periodiciteVidange();
+		System.out.println(c2.toString());
+		v1.setPlietoit(true);
+		v1.add_carburant(20);
+		v1.setPrix(3000000);
+		v3.setPlietoit(true);
+		v3.add_carburant(30);
+		v3.setPrix(200000);
+		v5.setPlietoit(false);
+		v5.add_carburant(15);
+		v5.setPrix(80000);
+		System.out.println("premier object v1 ::");
+		System.out.println(v1.toString());
+		System.out.println("deuxieme object v3 ::");
+		System.out.println(v3.toString());
+		System.out.println("troisieme object v5 ::");
+		System.out.println(v5.toString());
+
+		// serialisation: conserver les objects dans un fichier
+		// output pour ecrire dans canal
+
+		FileOutputStream f1 = new FileOutputStream("garage");
+		ObjectOutputStream o1 = new ObjectOutputStream(f1);
+		o1.writeObject(v1);
+		o1.writeObject(v3);
+		o1.writeObject(v5);
+		o1.close();
+		f1.close();
+		// de-s rialisation des objets Voiture
+		// input pour lire de canal
+		FileInputStream f2 = new FileInputStream("garage");
+		ObjectInputStream o2 = new ObjectInputStream(f2);
+		Voiture v2 = (Voiture) o2.readObject();
+		Voiture v4 = (Voiture) o2.readObject();
+		Voiture v6 = (Voiture) o2.readObject();
+		System.out.println("Object Serialises----------");
+		System.out.println("object serialise v2::");
+		System.out.println(v2.toString());
+		System.out.println("object serialise v4::");
+		System.out.println(v4.toString());
+		System.out.println("object serialise v6::");
+		System.out.println(v6.toString());
+		f2.close();
+		o2.close();
+
+	}
+
+}

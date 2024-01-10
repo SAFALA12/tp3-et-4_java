@@ -1,0 +1,280 @@
+public class Compte {
+	private static int num=1;
+	 private  int  code;
+	 private double solde;
+	private Agence agence;
+	private Client proprietaire;
+	private String type;
+	public Compte() {
+		this.solde = 0;
+		this.code=num++;
+	}
+	
+public Compte( double solde, Agence agence, Client proprietaire) {
+		
+	    this.code=num++;
+		this.solde = solde;
+		this.agence = agence;
+		this.proprietaire = proprietaire;
+		this.type="";
+	}
+	
+	public String getType() {
+	return type;
+}
+
+public void setType(String type) {
+	this.type = type;
+}
+
+	public int getCode() {
+		return code;
+	}
+	public void setCode(int code) {
+		this.code = code;
+	}
+	public double getSolde() {
+		return solde;
+	}
+	public void setSolde(double solde) {
+		this.solde = solde;
+	}
+	
+
+	@Override
+	public String toString() {
+		return "Compte [code=" +getCode() + ",Solde()=" + getSolde() + ", Agence()=" + getAgence().getNumero_agence()
+				+ ",Proprietaire()=" + getProprietaire().getCode();
+	}
+
+	public Agence getAgence() {
+		return agence;
+	}
+
+	public void setAgence(Agence agence) {
+		this.agence = agence;
+	}
+
+	public Client getProprietaire() {
+		return proprietaire;
+	}
+
+	public void setProprietaire(Client proprietaire) {
+		this.proprietaire = proprietaire;
+	}
+
+	public void verser(double montant) {
+		solde=solde+montant;
+	}
+	public void retirer(double montant) {
+		solde=solde-montant;
+	}
+
+	public double calculInteret() {
+		
+		return 0;
+	}
+	}
+***************************************************************************
+public class ComptePayant extends Compte{
+	 final double taux_operation = 5; 
+	 double solde; 
+	 private String type;
+	@Override
+	public String toString() {
+		return "ComptePayant [taux_operation=" + taux_operation + ", Agence=" + getAgence().getNumero_agence() +
+				", Proprietaire=" + getProprietaire().getCode()+", Solde=" + getSolde() + "]";
+	}
+	private Agence agence;
+	private Client proprietaire;
+
+
+ public ComptePayant(double solde, Client proprietaire, Agence agence) {
+	
+	this.solde = solde;
+	this.agence = agence;
+	this.proprietaire = proprietaire;
+	this.type="Payant";
+}
+public String getType() {
+	return type;
+}
+public void setType(String type) {
+	this.type = type;
+}
+public double getSolde() {
+	return solde;
+}
+public void setSolde(double solde) {
+	this.solde = solde;
+}
+public Agence getAgence() {
+	return agence;
+}
+public void setAgence(Agence agence) {
+	this.agence = agence;
+}
+public Client getProprietaire() {
+	return proprietaire;
+}
+public void setProprietaire(Client proprietaire) {
+	this.proprietaire = proprietaire;
+}
+public void verser(double montant) {
+		setSolde(getSolde()+montant-5);
+	}
+	public void retirer(double montant) {
+		setSolde(getSolde()-montant-5);
+	}
+}
+****************************************************************************
+public class CompteBancaire {
+
+	public static void main(String[] args) {
+		Agence ag= new Agence("adr11",10);
+		Client []lesclients=new Client[4];
+		String nom,prenom,adresse;
+		for(int i=0;i<4;i++) {
+			nom="NOM_"+(i+1);
+			prenom="PRENOM_"+(i+1);
+			adresse="ADRESSE_"+(i+1);
+			lesclients[i]=new Client(i,nom,prenom,adresse,ag);
+		}
+		//ajouter leq Comptes
+		//client1
+		lesclients[0].add_Compte(new CompteEpargne(23000,lesclients[0],ag));
+		//client2
+		lesclients[1].add_Compte(new ComptePayant(3000,lesclients[1],ag));
+		//client3
+		lesclients[2].add_Compte(new ComptePayant(0,lesclients[2],ag));
+		lesclients[2].add_Compte(new ComptePayant(500,lesclients[2],ag));
+		//cient4
+		lesclients[3].add_Compte(new CompteEpargne(2000,lesclients[3],ag));
+		lesclients[3].add_Compte(new ComptePayant(6000,lesclients[3],ag));
+		
+		//affichage des clients et leur comptes
+		System.out.println("-------affichage des clients et leur comptes");
+		System.out.println(lesclients[0].toString());
+		System.out.println(lesclients[1].toString());
+		System.out.println(lesclients[2].toString());
+		System.out.println(lesclients[3].toString());
+		//Appliquer la méthode CalculIntérêt(...) sur tous les comptes d’épargne de ’agence
+		System.out.println("-------Appliquer la méthode CalculInteret(...) sur tous les comptes d’epargne de ’agence");
+		  for(int i=0;i<=3;i++) { 
+				for(int j=0;j<lesclients[i].getNb_comptes();j++) {
+					if(lesclients[i].getMesComptes(j).getType()=="Epargne") {
+		    	   System.out.println(lesclients[i].getMesComptes(j).toString()+"-->"+ lesclients[i].getMesComptes(j).calculInteret());
+		    		
+		    	}
+				}
+				
+			}
+		    
+		//le solde total des comptes des clients 
+		System.out.println("-------le solde total des comptes des clients ");
+		for(int i=0;i<=3;i++) {
+			double somme=0;
+			for(int j=0;j<lesclients[i].getNb_comptes();j++)
+			somme=somme+lesclients[i].getMesComptes(j).getSolde();
+			lesclients[i].setSomme(somme);
+		}
+		for(int i=0;i<=3;i++) {
+			System.out.println("client "+(i+1)+ " "+lesclients[i].getSomme());
+			
+		}
+		
+		
+	  //afficher les comptes d'epargne de l'agence
+	    System.out.println("-------les Comptes d'epargne de l'agence :");
+	    for(int i=0;i<=3;i++) {
+			for(int j=0;j<lesclients[i].getNb_comptes();j++) {
+				if(lesclients[i].getMesComptes(j).getType()=="Epargne") {
+	    		System.out.println(lesclients[i].getMesComptes(j));
+	    	}
+			}
+			
+		}
+	    
+	    //afficher les comptes payantes de l'agence
+	    System.out.println("-------les Comptes payant de l'agence :");
+	    for(int i=0;i<=3;i++) {
+			for(int j=0;j<lesclients[i].getNb_comptes();j++) {
+				if(lesclients[i].getMesComptes(j).getType()=="Payant") {
+	    		System.out.println(lesclients[i].getMesComptes(j));
+	    	}
+			}
+			
+		}
+		}
+
+	}
+*****************************************************************************
+import java.util.Arrays;
+
+public class Agence {
+	public final static int nb_max_comptes=50;
+	private static int nb_max_clients=30;
+	private static int nb_comptes=0;
+	private static int nb_client=0;
+	String adresse;
+	int numero_agence;
+
+	private Client[] lesClients;
+	private Compte[] lesComptes;
+	
+	
+	
+	public Agence(String adresse, int numero_agence) {
+		
+		this.adresse = adresse;
+		this.numero_agence = numero_agence;
+		lesComptes=new Compte[nb_max_comptes];
+		lesClients=new Client[nb_max_clients];
+	}
+	
+	
+	
+	
+	public Client[] getLesClients() {
+		return lesClients;
+	}
+	
+	public Compte[] getLesComptes() {
+		return lesComptes;
+	}
+	
+	public String getAdresse() {
+		return adresse;
+	}
+	public void setAdresse(String adresse) {
+		this.adresse = adresse;
+	}
+	public int getNumero_agence() {
+		return numero_agence;
+	}
+	public void setNumero_agence(int numero_agence) {
+		this.numero_agence = numero_agence;
+	}
+
+
+	@Override
+	public String toString() {
+		return " LesClients()="+ Arrays.toString(getLesClients()) + ", LesComptes()=" + Arrays.toString(getLesComptes())
+				+ ",Adresse()=" + getAdresse() + ", Numero_agence()=" + getNumero_agence();
+	}
+
+
+
+
+	public void add_Compte( Compte cp) {
+		if(nb_comptes<nb_max_comptes)
+	lesComptes[nb_comptes++]=cp;
+	
+    }
+	 public void add_Client( Client cl) {
+			if(nb_client<nb_max_clients)
+				lesClients[nb_client++]=cl;
+			
+	    }
+
+}
